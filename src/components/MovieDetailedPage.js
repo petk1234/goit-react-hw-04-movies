@@ -1,10 +1,13 @@
 import React from "react";
-import { Component } from "react";
+import { Component, lazy, Suspense } from "react";
 import {Route, Link } from 'react-router-dom';
 import serverResp from "../services/webServer.js";
-import Cast from "./Cast";
-import Reviews from "./Reviews";
+// import Cast from "./Cast";
+// import Reviews from "./Reviews";
 import routes from "../routes.js";
+
+const Cast = lazy( () => import('./Cast' /* webpackChunkName: "Cast" */));
+const Reviews = lazy( () => import('./Reviews' /* webpackChunkName: "Reviews" */));
 export default class MovieDetailedPage extends Component{
     state ={
         imggg: '',
@@ -53,8 +56,10 @@ export default class MovieDetailedPage extends Component{
                    <Link to={`${this.props.match.url}/reviews`}>Reviews</Link>
                  </li>
                 </ul>
-                <Route path={routes.cast} exact component={Cast} />
-                <Route path={routes.reviews} exact component={Reviews} />
+                <Suspense fallback={<h1>loading222....</h1>}>
+                  <Route path={routes.cast} exact component={Cast} />
+                  <Route path={routes.reviews} exact component={Reviews} />
+                </Suspense>
             </>
         )
     }
